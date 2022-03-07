@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ShoppingoO.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>Products</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+         
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @item.Price.ToString("C2")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+         <img src ="~/lib/Media/Productimage/@item.Image"  width="100" alt=""/>
+            </td>
+            <td>
+                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                   
+                        <a  class="confirmDeletion"  asp-action="Delete" asp-route-id= "@item.Id" >Delete</a>
+                    
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="d-flex w-100 justify-content-center">
+    <pagination page-count="@ViewBag.TotalPages" page-target="/admin/products" page-number="@ViewBag.PageNumber" page-range="@ViewBag.PageRange"></pagination>
+</div>

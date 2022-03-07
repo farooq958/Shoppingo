@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ShoppingoO</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Products" asp-action="Index">ShoppingoO</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item ml-1">
+                                <a asp-controller="Account" asp-action="Edit" class="btn btn-primary">My Account </a>
+                            </li> 
+                            <li class="nav-item ml-1">
+                                <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Hi, @User.Identity.Name, Log out</a>
+                            </li> 
+                            @if (User.IsInRole("Admin") || User.IsInRole("Editor") )
+                             {
+                               <li class="nav-item ml-1">
+                                <a asp-area="Admin" asp-controller="Pages" asp-action="Index" class="btn btn-success">Admin Area</a>
+                            </li> 
+                           }
+                        }
+                        else{
+                        <li class="nav-item">
+                            <a class="btn btn-Primary " asp-action="Login" asp-controller="Account">Login</a>
+                            <a class="btn btn-success " asp-action="Register" asp-controller="Account">Register</a>
+                        </li>}
+                    </ul>
+                    <ul class="navbar-nav flex-grow-1">
+                        @await Component.InvokeAsync("MainMenu")
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <partial name ="_NotificationPartial"></partial>
+           <div  class ="row"  >
+               <div class ="col-3" >
+               @await Component.InvokeAsync("Categories")
+         <div class="smallcart bg-success mt-3 p-3 text-white">
+               @await Component.InvokeAsync("SmallCart")
+           </div> 
+           </div>
+               <div class="col">
+                   @RenderBody()
+               </div>
+           </div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        
+    </footer>
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.js"> </script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

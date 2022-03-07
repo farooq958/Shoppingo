@@ -1,0 +1,9 @@
+﻿@model Page
+@{
+    ViewData["Title"] = "ShopingoOCart";
+}
+@if (Model.Slug != "home")
+{
+    <h1>@Html.Raw(Model.Content)</h1>
+}
+

@@ -1,0 +1,82 @@
+﻿@model ShoppingoO.Models.CartViewModel
+
+@{
+    ViewData["Title"] = "Cart Overview";
+}
+
+
+@if (Model.CartItems.Count > 0)
+{
+    <h1>Cart Overview </h1>
+    <div class="cartWrapper">
+        <div class="cartbg d-none">
+            <h3 class="text-center">Redirecting you to paypal...</h3>
+            <img src="~/images/ajax-loader.gif" />
+        </div>
+       
+    <table class="table" >
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th></th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr>
+
+                <td>@item.ProductName</td>
+                 <td>@item.Quantity</td>
+                 <td>
+                     <a asp-action="Add" asp-route-id= "@item.ProductId " class="btn btn-sm btn-primary">+</a>
+                     <a asp-action="Decrease" asp-route-id= "@item.ProductId " class="btn btn-sm btn-success">-</a>
+                     <a asp-action="Remove" asp-route-id= "@item.ProductId " class="btn btn-sm btn-danger"> Remove </a>
+                 </td>
+                 <td>@item.Price.ToString("C2")</td>
+                      <td>@Model.CartItems.Where(x=>x.ProductId==item.ProductId).Sum(x=>x.Price*x.Quantity).ToString("C2")</td>
+
+            </tr>
+
+
+        }
+        <tr>
+            <td class="text-right" colspan="4" > Grand Total: @Model.GrandTotal.ToString("C2")</td>
+
+        </tr>
+         <tr>
+                <td class="text-right" colspan="4">
+                    <a asp-action="Clear" class="btn btn-danger">Clear Cart</a>
+                    <a href="#" class="btn btn-primary checkout">Checkout</a>
+                </td>
+            </tr>
+            
+    </table> 
+    </div>
+}
+else
+{
+    <h3 class="display-4 text-center">Your Cart Is Empty ! </h3>
+
+}
+<partial name="~/Views/Cart/_PaypalPartial.cshtml" for="CartItems" />
+@section Scripts {
+
+    <script>
+    $(function () {
+
+        $("a.checkout").click(function (e) {
+            e.preventDefault();
+
+            $("div.cartbg").removeClass("d-none");
+          //  @TempData["Success"]="Thankyouy for Shopping with us";
+            $.get("/cart/clear", {}, function () {
+                $("form.paypalform").submit();
+            });
+            
+        });
+
+    });
+    </script>
+
+}
